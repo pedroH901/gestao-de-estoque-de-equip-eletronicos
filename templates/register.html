@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Usuário</title>
+</head>
+<body>
+    <h2>Formulário de Registro</h2>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/register" method="POST">
+        <div>
+            <label for="username">Usuário (Login):</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <div>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div>
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
+    <br>
+    <a href="/login">Já tem conta? Faça o login</a>
+</body>
+</html>

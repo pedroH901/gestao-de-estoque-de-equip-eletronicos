@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Estoque</title>
+    <style>
+        .alert-warning { padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; margin-bottom: 10px; }
+        .alert-success { padding: 10px; background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; margin-bottom: 10px; }
+        .alert-error { padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <p>Logado como: <strong>{{ nome_usuario }}</strong> | <a href="/logout">Logout</a></p>
+    <a href="{{ url_for('principal') }}">&larr; Voltar para a Tela Principal</a>
+
+    <h1>Gestão de Estoque</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h3>Registrar Movimentação</h3>
+    <form action="{{ url_for('registrar_movimento') }}" method="POST">
+        
+        <label for="id_produto">Produto:</label>
+        <select name="id_produto" id="id_produto" required>
+            {% for p in produtos %}
+                <option value="{{ p['ID_produto'] }}">
+                    {{ p['Nome'] }} (Atual: {{ p['Quantidade'] }} | Min: {{ p['Estoque_Minimo'] }})
+                </option>
+            {% endfor %}
+        </select>
+        
+        <label for="tipo_operacao">Operação:</label>
+        <select name="tipo_operacao" id="tipo_operacao" required>
+            <option value="Entrada">Entrada</option>
+            <option value="Saída">Saída</option>
+        </select>
+        
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" name="quantidade" id="quantidade" min="1" required>
+        
+        <button type="submit">Registrar</button>
+    </form>
+
+    <h2>Histórico de Movimentações</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Produto</th>
+                <th>Operação</th>
+                <th>Quantidade</th>
+                <th>Responsável</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimentos %}
+            <tr>
+                <td>{{ m['Data'] }}</td>
+                <td>{{ m['NomeProduto'] }}</td>
+                <td>{{ m['Tipo_operacao'] }}</td>
+                <td>{{ m['Quantidade'] }}</td>
+                <td>{{ m['NomeUsuario'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">Nenhuma movimentação registrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

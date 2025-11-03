@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Produtos</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .form-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+        .search-container { margin-bottom: 20px; }
+        .actions { display: flex; gap: 5px; }
+    </style>
+</head>
+<body>
+    <p>Logado como: <strong>{{ nome_usuario }}</strong> | <a href="/logout">Logout</a></p>
+    <a href="{{ url_for('principal') }}">&larr; Voltar para a Tela Principal</a>
+
+    <h1>Cadastro de Produtos</h1>
+
+    <div class="form-container">
+        <h3>Adicionar Novo Produto</h3>
+        <form action="{{ url_for('add_produto') }}" method="POST">
+            <label>Nome:</label>
+            <input type="text" name="nome" required>
+            
+            <label>Descrição:</label>
+            <input type="text" name="descricao">
+            
+            <label>Quantidade:</label>
+            <input type="number" name="quantidade" value="0" required>
+            
+            <label>Estoque Mínimo:</label>
+            <input type="number" name="estoque_minimo" value="5" required>
+            
+            <button type="submit">Adicionar Produto</button>
+        </form>
+    </div>
+
+    <div class="search-container">
+        <h3>Buscar Produto</h3>
+        <form action="{{ url_for('cadastro_produto') }}" method="GET">
+            <input type="text" name="busca" placeholder="Digite o nome do produto..." value="{{ query_busca }}">
+            <button type="submit">Buscar</button>
+            <a href="{{ url_for('cadastro_produto') }}">Limpar Busca</a>
+        </form>
+    </div>
+
+    <h2>Produtos Cadastrados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Quantidade</th>
+                <th>Estoque Mínimo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto['ID_produto'] }}</td>
+                <td>{{ produto['Nome'] }}</td>
+                <td>{{ produto['Descricao'] }}</td>
+                <td>{{ produto['Quantidade'] }}</td>
+                <td>{{ produto['Estoque_Minimo'] }}</td>
+                <td class="actions">
+                    <a href="{{ url_for('edit_produto', id=produto['ID_produto']) }}">Editar</a>
+                    
+                    <form action="{{ url_for('delete_produto', id=produto['ID_produto']) }}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">Nenhum produto encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
