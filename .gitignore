@@ -1,0 +1,10 @@
+# Arquivos de Banco de Dados do SQLite
+*.db
+*.db-journal
+
+# Pasta de Cache do Python
+__pycache__/
+
+# Outros arquivos comuns de Python/VSCode
+.vscode/
+*.pyc
